@@ -15,20 +15,21 @@ namespace e_learning_application.Tests
             // Arrange
             var student = new Student("john.doe", "password", "John Doe");
             var subject = new Subject("Mathematics", "An introductory math course", teacherId: 1);
-            
+
             // Act: Enroll student if not already enrolled.
-            if (!student.EnrolledSubjects.Any(s => s.Id == subject.Id))
+            if (!student.EnrolledSubjects.Contains(subject.Id))
             {
-                student.EnrolledSubjects.Add(subject);
+                student.EnrolledSubjects.Add(subject.Id);
             }
             // Try enrolling the same subject a second time.
-            if (!student.EnrolledSubjects.Any(s => s.Id == subject.Id))
+            if (!student.EnrolledSubjects.Contains(subject.Id))
             {
-                student.EnrolledSubjects.Add(subject);
+                student.EnrolledSubjects.Add(subject.Id);
             }
 
             // Assert: The student should only be enrolled in the subject once.
             Assert.Single(student.EnrolledSubjects);
+            Assert.Contains(subject.Id, student.EnrolledSubjects);
         }
 
 
@@ -41,8 +42,8 @@ namespace e_learning_application.Tests
             var subject = new Subject("Mathematics", "An introductory math course", teacherId: 1);
 
             // Act: Intentionally add the subject twice without checking for duplicates.
-            student.EnrolledSubjects.Add(subject);
-            student.EnrolledSubjects.Add(subject);
+            student.EnrolledSubjects.Add(subject.Id);
+            student.EnrolledSubjects.Add(subject.Id);
 
             // Assert: This assertion will fail because the student is enrolled twice.
             Assert.Single(student.EnrolledSubjects);
@@ -62,7 +63,7 @@ namespace e_learning_application.Tests
             // is one approach. Here we simulate persistence by writing to a temporary file.
             // We'll write and read our data using the same instance.
             // (Note: In a real-world scenario, dependency injection would allow us to set the file path.)
-            
+
             // Save some test students.
             var students = new List<Student>
             {
@@ -101,3 +102,4 @@ namespace e_learning_application.Tests
         }
     }
 }
+
